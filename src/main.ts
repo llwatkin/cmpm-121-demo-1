@@ -23,7 +23,13 @@ function updateCounter() {
 updateCounter();
 app.append(counterText);
 
-button.addEventListener("click", () => {
+function step() {
   steps++;
   updateCounter();
+}
+
+button.addEventListener("click", () => {
+  step();
 });
+
+setInterval(step, 1000);

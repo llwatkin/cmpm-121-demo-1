@@ -15,7 +15,7 @@ app.append(button);
 let steps: number = 0;
 const counterText = document.createElement("h3");
 function updateCounter() {
-  counterText.innerHTML = steps + " step";
+  counterText.innerHTML = steps.toFixed(2) + " step";
   if (steps != 1) {
     counterText.innerHTML += "s";
   }
@@ -32,4 +32,14 @@ button.addEventListener("click", () => {
   step();
 });
 
-setInterval(step, 1000);
+let zero = performance.now();
+requestAnimationFrame(autoStepper);
+// Runs every frame
+function autoStepper() {
+  const elapsedTime = (performance.now() - zero) / 1000; // 1000 milliseconds in a second
+  console.log(elapsedTime); // This is the fraction of a second that has passed since the last frame
+  steps += elapsedTime;
+  updateCounter();
+  zero = performance.now();
+  requestAnimationFrame(autoStepper);
+}

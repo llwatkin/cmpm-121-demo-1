@@ -8,14 +8,14 @@ const header = document.createElement("h1");
 header.innerHTML = gameName;
 app.append(header);
 
-const button = document.createElement("button");
-button.innerHTML = "👣";
-app.append(button);
+const stepButton = document.createElement("button");
+stepButton.innerHTML = "👣";
+app.append(stepButton);
 
 let steps: number = 0;
 const counterText = document.createElement("h3");
 function updateCounter() {
-  counterText.innerHTML = steps.toFixed(2) + " step";
+  counterText.innerHTML = steps.toFixed(0) + " step";
   if (steps != 1) {
     counterText.innerHTML += "s";
   }
@@ -28,18 +28,37 @@ function step() {
   updateCounter();
 }
 
-button.addEventListener("click", () => {
+stepButton.addEventListener("click", () => {
   step();
 });
 
 let zero = performance.now();
+let autoRate = 0;
 requestAnimationFrame(autoStepper);
 // Runs every frame
 function autoStepper() {
-  const elapsedTime = (performance.now() - zero) / 1000; // 1000 milliseconds in a second
-  console.log(elapsedTime); // This is the fraction of a second that has passed since the last frame
+  const elapsedTime = ((performance.now() - zero) / 1000) * autoRate; // 1000 milliseconds in a second
   steps += elapsedTime;
   updateCounter();
   zero = performance.now();
+  updateUpgradeAvailability();
   requestAnimationFrame(autoStepper);
 }
+
+const upgrade1Button = document.createElement("button");
+upgrade1Button.innerHTML = "🧦";
+upgrade1Button.disabled = true;
+app.append(upgrade1Button);
+
+function hasSteps(val: number) {
+  return steps >= val;
+}
+
+function updateUpgradeAvailability() {
+  upgrade1Button.disabled = !hasSteps(10);
+}
+
+upgrade1Button.addEventListener("click", () => {
+  steps -= 10;
+  autoRate += 1;
+});

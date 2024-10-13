@@ -13,52 +13,96 @@ stepButton.innerHTML = "👣";
 app.append(stepButton);
 
 let steps: number = 0;
-const counterText = document.createElement("h3");
+const counterDisplay = document.createElement("h3");
 function updateCounter() {
-  counterText.innerHTML = steps.toFixed(0) + " step";
+  counterDisplay.innerHTML = steps.toFixed(0) + " step";
   if (steps != 1) {
-    counterText.innerHTML += "s";
+    counterDisplay.innerHTML += "s";
   }
 }
 updateCounter();
-app.append(counterText);
+app.append(counterDisplay);
 
-function step() {
-  steps++;
+function step(distance: number) {
+  steps += distance;
   updateCounter();
+  updateRate();
+  updateUpgradeAvailability();
 }
 
 stepButton.addEventListener("click", () => {
-  step();
+  step(1);
 });
 
 let zero = performance.now();
 let autoRate = 0;
 requestAnimationFrame(autoStepper);
-// Runs every frame
 function autoStepper() {
-  const elapsedTime = ((performance.now() - zero) / 1000) * autoRate; // 1000 milliseconds in a second
-  steps += elapsedTime;
-  updateCounter();
+  const distance = ((performance.now() - zero) / 1000) * autoRate; // 1000 milliseconds in a second
+  step(distance);
   zero = performance.now();
-  updateUpgradeAvailability();
   requestAnimationFrame(autoStepper);
 }
 
-const upgrade1Button = document.createElement("button");
-upgrade1Button.innerHTML = "🧦";
-upgrade1Button.disabled = true;
-app.append(upgrade1Button);
+const rateDisplay = document.createElement("h4");
+function updateRate() {
+  rateDisplay.innerHTML = autoRate.toFixed(1) + " steps/sec";
+}
+updateRate();
+app.append(rateDisplay);
+
+interface Upgrade {
+  name: string;
+  cost: number;
+  rate: number;
+}
+const upgrades: Upgrade[] = [
+  { name: "🩴", cost: 10, rate: 0.1 },
+  { name: "🥾", cost: 100, rate: 2 },
+  { name: "👟", cost: 1000, rate: 50 },
+];
+
+class UpgradeDisplay {
+  cost: number;
+  button: HTMLButtonElement;
+  amount: number;
+
+  constructor(upgrade: Upgrade) {
+    const button = document.createElement("button");
+    button.innerHTML = upgrade.name;
+    button.disabled = true;
+    app.append(button);
+
+    const amountDisplay = document.createElement("h5");
+    amountDisplay.innerHTML = "0";
+    app.append(amountDisplay);
+
+    button.addEventListener("click", () => {
+      steps -= upgrade.cost;
+      autoRate += upgrade.rate;
+      this.amount++;
+      amountDisplay.innerHTML = this.amount.toString();
+    });
+
+    this.cost = upgrade.cost;
+    this.button = button;
+    this.amount = 0;
+    return this;
+  }
+}
+
+// Create all upgrade buttons
+const upgradeButtons: UpgradeDisplay[] = [];
+for (let i = 0; i < upgrades.length; i++) {
+  upgradeButtons[i] = new UpgradeDisplay(upgrades[i]);
+}
 
 function hasSteps(val: number) {
   return steps >= val;
 }
 
 function updateUpgradeAvailability() {
-  upgrade1Button.disabled = !hasSteps(10);
+  for (let i = 0; i < upgradeButtons.length; i++) {
+    upgradeButtons[i].button.disabled = !hasSteps(upgradeButtons[i].cost);
+  }
 }
-
-upgrade1Button.addEventListener("click", () => {
-  steps -= 10;
-  autoRate += 1;
-});

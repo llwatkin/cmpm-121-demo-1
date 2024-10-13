@@ -1,52 +1,50 @@
 import "./style.css";
 const app: HTMLDivElement = document.querySelector("#app")!;
 
-const gameName = "Stepper";
+const gameName = "Fishing";
 document.title = gameName;
 
 const header = document.createElement("h1");
 header.innerHTML = gameName;
 app.append(header);
 
-const stepButton = document.createElement("button");
-stepButton.innerHTML = "👣";
-app.append(stepButton);
+const incrementButton = document.createElement("button");
+incrementButton.innerHTML = "🐟";
+app.append(incrementButton);
 
-let steps: number = 0;
+let total: number = 0;
+const unit = "fish";
 const counterDisplay = document.createElement("h3");
 function updateCounterDisplay() {
-  counterDisplay.innerHTML = steps.toFixed(1) + " step";
-  if (steps != 1) {
-    counterDisplay.innerHTML += "s";
-  }
+  counterDisplay.innerHTML = total.toFixed(0) + " " + unit;
 }
 updateCounterDisplay();
 app.append(counterDisplay);
 
-function step(distance: number) {
-  steps += distance;
+function increment(amount: number) {
+  total += amount;
   updateCounterDisplay();
   updateRateDisplay();
   updateUpgradeAvailability();
 }
 
-stepButton.addEventListener("click", () => {
-  step(1);
+incrementButton.addEventListener("click", () => {
+  increment(1);
 });
 
 let zero = performance.now();
 let autoRate = 0;
-requestAnimationFrame(autoStepper);
-function autoStepper() {
+requestAnimationFrame(autoIncrement);
+function autoIncrement() {
   const distance = ((performance.now() - zero) / 1000) * autoRate; // 1000 milliseconds in a second
-  step(distance);
+  increment(distance);
   zero = performance.now();
-  requestAnimationFrame(autoStepper);
+  requestAnimationFrame(autoIncrement);
 }
 
 const rateDisplay = document.createElement("h4");
 function updateRateDisplay() {
-  rateDisplay.innerHTML = autoRate.toFixed(1) + " steps/sec";
+  rateDisplay.innerHTML = autoRate.toFixed(1) + " " + unit + "/sec";
 }
 updateRateDisplay();
 app.append(rateDisplay);
@@ -57,9 +55,9 @@ interface Upgrade {
   rate: number;
 }
 const upgrades: Upgrade[] = [
-  { name: "🩴", cost: 10, rate: 0.1 },
-  { name: "🥾", cost: 100, rate: 2 },
-  { name: "👟", cost: 1000, rate: 50 },
+  { name: "🧍", cost: 10, rate: 0.1 },
+  { name: "🛶", cost: 100, rate: 2 },
+  { name: "⛵", cost: 1000, rate: 50 },
 ];
 
 class UpgradeDisplay {
@@ -78,7 +76,7 @@ class UpgradeDisplay {
     app.append(amountDisplay);
 
     button.addEventListener("click", () => {
-      steps -= this.cost;
+      total -= this.cost;
       this.cost *= 1.15;
       autoRate += upgrade.rate;
       this.amount++;
@@ -98,12 +96,12 @@ for (let i = 0; i < upgrades.length; i++) {
   upgradeButtons[i] = new UpgradeDisplay(upgrades[i]);
 }
 
-function hasSteps(val: number) {
-  return steps >= val;
+function canBuy(val: number): boolean {
+  return total >= val;
 }
 
 function updateUpgradeAvailability() {
   for (let i = 0; i < upgradeButtons.length; i++) {
-    upgradeButtons[i].button.disabled = !hasSteps(upgradeButtons[i].cost);
+    upgradeButtons[i].button.disabled = !canBuy(upgradeButtons[i].cost);
   }
 }

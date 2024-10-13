@@ -14,19 +14,19 @@ app.append(stepButton);
 
 let steps: number = 0;
 const counterDisplay = document.createElement("h3");
-function updateCounter() {
-  counterDisplay.innerHTML = steps.toFixed(0) + " step";
+function updateCounterDisplay() {
+  counterDisplay.innerHTML = steps.toFixed(1) + " step";
   if (steps != 1) {
     counterDisplay.innerHTML += "s";
   }
 }
-updateCounter();
+updateCounterDisplay();
 app.append(counterDisplay);
 
 function step(distance: number) {
   steps += distance;
-  updateCounter();
-  updateRate();
+  updateCounterDisplay();
+  updateRateDisplay();
   updateUpgradeAvailability();
 }
 
@@ -45,10 +45,10 @@ function autoStepper() {
 }
 
 const rateDisplay = document.createElement("h4");
-function updateRate() {
+function updateRateDisplay() {
   rateDisplay.innerHTML = autoRate.toFixed(1) + " steps/sec";
 }
-updateRate();
+updateRateDisplay();
 app.append(rateDisplay);
 
 interface Upgrade {
@@ -78,7 +78,8 @@ class UpgradeDisplay {
     app.append(amountDisplay);
 
     button.addEventListener("click", () => {
-      steps -= upgrade.cost;
+      steps -= this.cost;
+      this.cost *= 1.15;
       autoRate += upgrade.rate;
       this.amount++;
       amountDisplay.innerHTML = this.amount.toString();

@@ -52,14 +52,42 @@ app.append(rateDisplay);
 // Already did step 9 when I did step 6
 interface Upgrade {
   name: string;
+  desc: string;
   cost: number;
   rate: number;
 }
 
 const upgrades: Upgrade[] = [
-  { name: "🧍", cost: 10, rate: 0.1 },
-  { name: "🛶", cost: 100, rate: 2 },
-  { name: "⛵", cost: 1000, rate: 50 },
+  {
+    name: "🧍Fisher",
+    desc: "A dedicated worker that catches 1 fish every 10 seconds.",
+    cost: 10,
+    rate: 0.1,
+  },
+  {
+    name: "🛶Canoe",
+    desc: "A trusty boat for reaching more fish.",
+    cost: 100,
+    rate: 2,
+  },
+  {
+    name: "⛵Sailboat",
+    desc: "A faster boat for reaching more fish.",
+    cost: 1000,
+    rate: 50,
+  },
+  {
+    name: "🚤Speedboat",
+    desc: "A speedy boat with fish detection technology.",
+    cost: 5000,
+    rate: 150,
+  },
+  {
+    name: "🛥️Motorboat",
+    desc: "A large, speedy boat with netting.",
+    cost: 10000,
+    rate: 500,
+  },
 ];
 
 class UpgradeDisplay {
@@ -76,6 +104,10 @@ class UpgradeDisplay {
     const amountDisplay = document.createElement("h5");
     amountDisplay.innerHTML = "0";
     app.append(amountDisplay);
+
+    const descDisplay = document.createElement("h6");
+    descDisplay.innerHTML = upgrade.desc;
+    app.append(descDisplay);
 
     button.addEventListener("click", () => {
       total -= this.cost;

@@ -49,11 +49,13 @@ function updateRateDisplay() {
 updateRateDisplay();
 app.append(rateDisplay);
 
+// Already did step 9 when I did step 6
 interface Upgrade {
   name: string;
   cost: number;
   rate: number;
 }
+
 const upgrades: Upgrade[] = [
   { name: "🧍", cost: 10, rate: 0.1 },
   { name: "🛶", cost: 100, rate: 2 },

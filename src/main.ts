@@ -130,11 +130,11 @@ incrementButton.addEventListener("click", () => {
   increment(1);
 });
 
-let zero = performance.now();
+let lastTimestamp = performance.now();
 requestAnimationFrame(autoIncrement);
 function autoIncrement() {
-  const distance = ((performance.now() - zero) / 1000) * autoRate;
+  const distance = ((performance.now() - lastTimestamp) / 1000) * autoRate;
   increment(distance);
-  zero = performance.now();
+  lastTimestamp = performance.now();
   requestAnimationFrame(autoIncrement);
 }

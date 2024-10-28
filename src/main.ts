@@ -69,6 +69,8 @@ const upgrades: Upgrade[] = [
   },
 ];
 
+const COST_MULTIPLIER = 1.15;
+
 class UpgradeDisplay {
   cost: number;
   button: HTMLButtonElement;
@@ -90,7 +92,7 @@ class UpgradeDisplay {
 
     button.addEventListener("click", () => {
       total -= this.cost;
-      this.cost *= 1.15;
+      this.cost *= COST_MULTIPLIER;
       autoRate += upgrade.rate;
       this.amount++;
       amountDisplay.innerHTML = this.amount.toString();
@@ -131,9 +133,11 @@ incrementButton.addEventListener("click", () => {
 });
 
 let lastTimestamp = performance.now();
+const ONE_SECOND = 1000; // 1000 milliseconds
 requestAnimationFrame(autoIncrement);
 function autoIncrement() {
-  const distance = ((performance.now() - lastTimestamp) / 1000) * autoRate;
+  const distance =
+    ((performance.now() - lastTimestamp) / ONE_SECOND) * autoRate;
   increment(distance);
   lastTimestamp = performance.now();
   requestAnimationFrame(autoIncrement);

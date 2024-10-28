@@ -21,27 +21,7 @@ function updateCounterDisplay() {
 updateCounterDisplay();
 app.append(counterDisplay);
 
-function increment(amount: number) {
-  total += amount;
-  updateCounterDisplay();
-  updateRateDisplay();
-  updateUpgradeAvailability();
-}
-
-incrementButton.addEventListener("click", () => {
-  increment(1);
-});
-
-let zero = performance.now();
 let autoRate = 0;
-requestAnimationFrame(autoIncrement);
-function autoIncrement() {
-  const distance = ((performance.now() - zero) / 1000) * autoRate; // 1000 milliseconds in a second
-  increment(distance);
-  zero = performance.now();
-  requestAnimationFrame(autoIncrement);
-}
-
 const rateDisplay = document.createElement("h4");
 function updateRateDisplay() {
   rateDisplay.innerHTML = autoRate.toFixed(1) + " " + unit + "/sec";
@@ -49,7 +29,6 @@ function updateRateDisplay() {
 updateRateDisplay();
 app.append(rateDisplay);
 
-// Already did step 9 when I did step 6
 interface Upgrade {
   name: string;
   desc: string;
@@ -138,4 +117,24 @@ function updateUpgradeAvailability() {
   for (let i = 0; i < upgradeButtons.length; i++) {
     upgradeButtons[i].button.disabled = !canBuy(upgradeButtons[i].cost);
   }
+}
+
+function increment(amount: number) {
+  total += amount;
+  updateCounterDisplay();
+  updateRateDisplay();
+  updateUpgradeAvailability();
+}
+
+incrementButton.addEventListener("click", () => {
+  increment(1);
+});
+
+let zero = performance.now();
+requestAnimationFrame(autoIncrement);
+function autoIncrement() {
+  const distance = ((performance.now() - zero) / 1000) * autoRate;
+  increment(distance);
+  zero = performance.now();
+  requestAnimationFrame(autoIncrement);
 }

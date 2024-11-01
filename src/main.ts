@@ -8,12 +8,15 @@ const header = document.createElement("h1");
 header.innerHTML = gameName;
 app.append(header);
 
+const unit = "fish";
+const unit_emoji = "🐟";
 const incrementButton = document.createElement("button");
-incrementButton.innerHTML = "🐟";
+incrementButton.innerHTML = unit_emoji;
+incrementButton.style.fontSize = "60px";
+incrementButton.style.padding = "0px";
 app.append(incrementButton);
 
 let total: number = 0;
-const unit = "fish";
 const counterDisplay = document.createElement("h3");
 function updateCounterDisplay() {
   counterDisplay.innerHTML = total.toFixed(0) + " " + unit;
@@ -44,25 +47,25 @@ const upgrades: Upgrade[] = [
     rate: 0.1,
   },
   {
-    name: "🛶Canoe",
+    name: "🛶 Canoe",
     desc: "A trusty boat for reaching more fish.",
     cost: 100,
     rate: 2,
   },
   {
-    name: "⛵Sailboat",
+    name: "⛵ Sailboat",
     desc: "A faster boat for reaching more fish.",
     cost: 1000,
     rate: 50,
   },
   {
-    name: "🚤Speedboat",
+    name: "🚤 Speedboat",
     desc: "A speedy boat with fish detection technology.",
     cost: 5000,
     rate: 150,
   },
   {
-    name: "🛥️Motorboat",
+    name: "🛥️ Motorboat",
     desc: "A large, speedy boat with netting.",
     cost: 10000,
     rate: 500,
@@ -82,13 +85,20 @@ class UpgradeDisplay {
     button.disabled = true;
     app.append(button);
 
-    const amountDisplay = document.createElement("h5");
-    amountDisplay.innerHTML = "0";
-    app.append(amountDisplay);
+    const costDisplay = document.createElement("h5");
+    costDisplay.innerHTML = upgrade.cost + "x " + unit_emoji;
+    costDisplay.style.margin = "5px";
+    button.append(costDisplay);
 
     const descDisplay = document.createElement("h6");
     descDisplay.innerHTML = upgrade.desc;
-    app.append(descDisplay);
+    descDisplay.style.margin = "5px";
+    button.append(descDisplay);
+
+    const amountDisplay = document.createElement("h4");
+    amountDisplay.innerHTML = "0";
+    amountDisplay.style.margin = "0px";
+    button.append(amountDisplay);
 
     button.addEventListener("click", () => {
       total -= this.cost;
@@ -96,6 +106,7 @@ class UpgradeDisplay {
       autoRate += upgrade.rate;
       this.amount++;
       amountDisplay.innerHTML = this.amount.toString();
+      costDisplay.innerHTML = this.cost.toFixed(0) + "x " + unit_emoji;
     });
 
     this.cost = upgrade.cost;

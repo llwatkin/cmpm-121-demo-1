@@ -106,7 +106,7 @@ class UpgradeDisplay {
       autoRate += upgrade.rate;
       this.amount++;
       amountDisplay.innerHTML = this.amount.toString();
-      costDisplay.innerHTML = this.cost.toFixed(0) + "x " + unit_emoji;
+      costDisplay.innerHTML = this.cost.toFixed(1) + "x " + unit_emoji;
     });
 
     this.cost = upgrade.cost;
